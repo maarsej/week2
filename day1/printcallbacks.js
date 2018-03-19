@@ -3,7 +3,7 @@ var https = require('https');
 function getHTML (options, callback) {
 
   /* Add your code here */
-  https.get(requestOptions, function (response) {
+  https.get(options, function (response) {
     response.setEncoding('utf8');
 
     var buffer ="";
