@@ -6,7 +6,7 @@ var requestOptions = {
 };
 
 function printHTML (html) {
-  var output = html.toUpperCase()
+  var output = html.toUpperCase();
   console.log(output);
 }
 
