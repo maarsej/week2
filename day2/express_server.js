@@ -22,7 +22,7 @@ function generateRandomString(){
 
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  res.end("Hello! Welcome to tiny URLs, try /urls for some more interesting content");
 });
 
 app.get("/urls", (req, res) => {
@@ -30,14 +30,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
   //res.end("test");
 });
-
-app.get("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
-  res.render("urls_new");
-});
-app.post("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
-  res.render("urls_new");
-});
-
 app.post("/urls", (req, res) => {
   // console.log(req.body);                // statement to see POST parameters (url given at urls/new)
   let newID = generateRandomString();
@@ -47,16 +39,24 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${newID}`);
 });
 
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id };    // req.params.id = ':id'
-  // console.log(templateVars);
-  res.render("urls_show_short", templateVars);
+app.get("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
+  res.render("urls_new");
+});
+app.post("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
+  res.render("urls_new");
 });
 
-app.post("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id };    // req.params.id = ':id'
+
+
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { urls: urlDatabase, key: req.params.id};   // req.params.id = ':id'
   // console.log(templateVars);
-  res.render("urls_show_short", templateVars);
+  res.render("urls_show", templateVars);
+});
+app.post("/urls/:id", (req, res) => {
+  let templateVars = { urls: urlDatabase, key: req.params.id};    // req.params.id = ':id'
+  // console.log(templateVars);
+  res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -75,7 +75,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/longURL/:id", (req,res) => {
   let templateVars = { urls: urlDatabase, key: req.params.id};
-  res.render("urls_show_long", templateVars);
+  res.render("urls_show", templateVars);
 
 });
 

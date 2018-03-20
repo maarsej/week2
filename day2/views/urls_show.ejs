@@ -8,9 +8,9 @@
 </header>
 <body>
   <!-- Add your EJS code here -->
-<h2>Long URL Update</h2>
-<p> ID: <%= shortURL %> </p>
-<form method="POST" action="/urls/<%= shortURL %>/update">
+<h2><%= urls[key]+" " %>Update</h2>
+<p> ID: <%= key %> </p>
+<form method="POST" action="/urls/<%= key %>/update">
   <label for="updateURL">Update a URL:</label>
   <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
   <input type="submit" value="Update">
