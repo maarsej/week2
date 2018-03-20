@@ -1,12 +1,23 @@
-
+<!DOCTYPE html>
+<html lang="en">
 <div class="container-fluid">
   <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
   Test Header
   <form style="display: inline;" method="GET" action="/urls">
     <input type="submit" value="Home">
-  <form style="display: inline;" method="GET" action="/urls">
-    <label for="username">Username:</label>
-  <input id="username" type="text" name="username" placeholder="john123" style="width: 300px">
-  <input type="submit" value="Submit">
   </form>
+  <body>
+    <% if(username == undefined){ %>
+    <form style="display: inline;" method="POST" action="/login">
+      <label for="username"> Username: </label>
+      <input id="username" type="text" name="username" placeholder="username" style="width: 300px">
+      <input type="submit" value="Login">
+    </form>
+    <% } else { %>
+    <form style="display: inline;" method="POST" action="/logout">
+      <%= 'Logged in as: ' + username %>
+      <input type="submit" value="Logout">
+    </form>
+    <% } %>
+  </body>
 </div>

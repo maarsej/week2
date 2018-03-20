@@ -3,8 +3,10 @@
 var express = require("express");
 var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
+const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
@@ -18,7 +20,6 @@ function generateRandomString(){
 }
 // for (i = 0; i<20; i++){
 //   console.log(generateRandomString());
-// }
 
 
 app.get("/", (req, res) => {
@@ -26,41 +27,49 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  var templateVars = { urls: urlDatabase };
+  let templateVars = { username: req.cookies["username"],
+  urls: urlDatabase, key: req.params.id};
   res.render("urls_index", templateVars);
-  //res.end("test");
 });
 app.post("/urls", (req, res) => {
-  // console.log(req.body);                // statement to see POST parameters (url given at urls/new)
   let newID = generateRandomString();
-  urlDatabase[newID] = req.body.longURL ;
-  // console.log(urlDatabase);
-  // res.send(`New URL Recieved: ${req.body.longURL} and this is the ID: ${newID}`);         // Respond with 'Ok' (we will replace this)
+  let check = true;
+  while (check === true){
+    if (urlDatabase[newID] !== undefined) {
+      let newID = generateRandomString();
+    } else {
+      urlDatabase[newID] = req.body.longURL ;
+      check = false;
+    }
+  }
   res.redirect(`/urls/${newID}`);
 });
 
-app.get("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
-  res.render("urls_new");
+app.get("/urls/new", (req, res) => {
+  var templateVars = { username: req.cookies["username"],
+  urls: urlDatabase, key: req.params.id};
+  res.render("urls_new", templateVars);
 });
-app.post("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
-  res.render("urls_new");
+app.post("/urls/new", (req, res) => {
+ let templateVars = { username: req.cookies["username"],
+ urls: urlDatabase, key: req.params.id};
+ res.render("urls_new", templateVars);
 });
 
 
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { urls: urlDatabase, key: req.params.id};   // req.params.id = ':id'
-  // console.log(templateVars);
+  let templateVars = { username: req.cookies["username"],
+  urls: urlDatabase, key: req.params.id};
   res.render("urls_show", templateVars);
 });
 app.post("/urls/:id", (req, res) => {
-  let templateVars = { urls: urlDatabase, key: req.params.id};    // req.params.id = ':id'
-  // console.log(templateVars);
+  let templateVars = { username:req.cookies["username"],
+  urls: urlDatabase, key: req.params.id};
   res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  // let longURL = ...
   if (urlDatabase[req.params.shortURL] === undefined) {
     res.statusCode = 404;
     console.log(res.statusCode);
@@ -70,19 +79,17 @@ app.get("/u/:shortURL", (req, res) => {
     console.log(res.statusCode);
     res.redirect(`/longURL/${req.params.shortURL}`);
   }
-
 });
 
 app.get("/longURL/:id", (req,res) => {
-  let templateVars = { urls: urlDatabase, key: req.params.id};
+  let templateVars = { username:req.cookies["username"],
+  urls: urlDatabase, key: req.params.id};
   res.render("urls_show", templateVars);
 
 });
 
 app.post("/urls/:id/delete", (req,res) => {
-  // console.log(urlDatabase);
   delete urlDatabase[req.params.id];
-  // console.log(urlDatabase);
   res.redirect('/urls');
 });
 
@@ -90,9 +97,18 @@ app.post("/urls/:id/update", (req,res) => {
   urlDatabase[req.params.id] = req.body.updateURL;
   res.redirect('/urls');
 })
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
+
+let username = 'username';
+app.post("/login", (req,res) => {
+  res.cookie(username, req.body.username);
+  res.redirect('urls');
+});
+
+app.post("/logout", (req,res) => {
+  res.clearCookie(username);
+  res.redirect('urls');
+})
+
 
 app.listen(PORT, () => {
   console.log(`Tiny URL App listening on port ${PORT}!`);
