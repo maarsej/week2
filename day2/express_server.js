@@ -109,11 +109,14 @@ app.get("/register", (req,res) => {
 
 app.post("/register", (req,res) => {
   // store user data
-  users[req.body.id].id = req.body.id;
-  users[req.body.id].email = req.body.password;
-  users[req.body.id].password= req.body.email;
+  users[req.body.id]= { id : req.body.id,
+                        email: req.body.email,
+                        password: req.body.password
+                      };
+  // add user_ID to cookie
+  res.cookie('userID', req.body.id);
   //redirect to front page
-  res.redirect("urls_index")
+  res.redirect("/urls")
 });
 
 app.post("/urls/:id/delete", (req,res) => {
@@ -126,14 +129,13 @@ app.post("/urls/:id/update", (req,res) => {
   res.redirect('/urls');
 })
 
-let username = 'username';
 app.post("/login", (req,res) => {
-  res.cookie(username, req.body.username);
+  res.cookie('username', req.body.username);
   res.redirect('urls');
 });
 
 app.post("/logout", (req,res) => {
-  res.clearCookie(username);
+  res.clearCookie('username');
   res.redirect('urls');
 })
 
