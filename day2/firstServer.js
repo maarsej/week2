@@ -1,6 +1,8 @@
 const http = require("http");
 const PORT = 8080;
 
+var server = http.createServer(requestHandler);
+
 // a function which handles requests and sends response
 function requestHandler(request, response) {
     if (request.url == "/") {
@@ -13,7 +15,6 @@ function requestHandler(request, response) {
   }
 }
 
-var server = http.createServer(requestHandler);
 
 server.listen(PORT, () => {
   console.log(`Server listening on: http://localhost:${PORT}`);
