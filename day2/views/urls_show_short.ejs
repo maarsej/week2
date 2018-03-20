@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>ShowEjs</title>
+  <title>Edit Long URL</title>
 </head>
 <header>
   <% include ./partials/_header.ejs %>
 </header>
 <body>
   <!-- Add your EJS code here -->
-<h2>Short URL for url provided</h2>
-<p> ID: <%= shortURL %></p>
-
+<h2>Long URL Update</h2>
+<p> ID: <%= shortURL %> </p>
+<form method="POST" action="/urls/<%= shortURL %>/update">
+  <label for="updateURL">Update a URL:</label>
+  <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
+  <input type="submit" value="Update">
+</form>
 
 </body>
 </html>

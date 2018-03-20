@@ -8,11 +8,26 @@
   </header>
 <body>
   <!-- Add your EJS code here -->
-  <h1>URLs</h1>
-  <h2>
+  <form method="POST" action="/urls/new">
+    <h1> URLs
+    <input type="submit" value="New URL">
+    </h1>
+  </form>
+
+
     <!-- need a forEach to show keys here -->
-    <%= Object.values(urls) %>
-  </h2>
+    <% for (key in urls) {%>
+    <h2>
+      <form method="POST" action="/urls/<%= key %>/delete">
+      <%= key+"-->" %>
+      <%= urls[key] %>
+        <input type="submit" value="Delete">
+      </form>
+      <form method="POST" action="/urls/<%= key %>">
+        <input type="submit" value="Edit">
+      </form>
+    </h2>
+    <% } %>
 
 
 </body>

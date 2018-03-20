@@ -34,6 +34,9 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
   res.render("urls_new");
 });
+app.post("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
+  res.render("urls_new");
+});
 
 app.post("/urls", (req, res) => {
   // console.log(req.body);                // statement to see POST parameters (url given at urls/new)
@@ -48,7 +51,12 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id };    // req.params.id = ':id'
   // console.log(templateVars);
   res.render("urls_show_short", templateVars);
+});
 
+app.post("/urls/:id", (req, res) => {
+  let templateVars = { shortURL: req.params.id };    // req.params.id = ':id'
+  // console.log(templateVars);
+  res.render("urls_show_short", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -71,10 +79,21 @@ app.get("/longURL/:id", (req,res) => {
 
 });
 
+app.post("/urls/:id/delete", (req,res) => {
+  // console.log(urlDatabase);
+  delete urlDatabase[req.params.id];
+  // console.log(urlDatabase);
+  res.redirect('/urls');
+});
+
+app.post("/urls/:id/update", (req,res) => {
+  urlDatabase[req.params.id] = req.body.updateURL;
+  res.redirect('/urls');
+})
 // app.get("/urls.json", (req, res) => {
 //   res.json(urlDatabase);
 // });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Tiny URL App listening on port ${PORT}!`);
 });

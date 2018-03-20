@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon express_server.js"
+    "start:dev": "nodemon express_server.js -L"
   },
   "keywords": [],
   "author": "",
