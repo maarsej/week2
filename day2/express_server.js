@@ -10,10 +10,23 @@ app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 function generateRandomString(){
   return Math.floor((1 + Math.random()) * 0x100000000).toString(36).substring(1);  //random number ==> to any letter/number
@@ -86,6 +99,21 @@ app.get("/longURL/:id", (req,res) => {
   urls: urlDatabase, key: req.params.id};
   res.render("urls_show", templateVars);
 
+});
+
+app.get("/register", (req,res) => {
+  let templateVars = { username:req.cookies["username"],
+  urls: urlDatabase, key: req.params.id};
+  res.render("urls_register", templateVars);
+});
+
+app.post("/register", (req,res) => {
+  // store user data
+  users[req.body.id].id = req.body.id;
+  users[req.body.id].email = req.body.password;
+  users[req.body.id].password= req.body.email;
+  //redirect to front page
+  res.redirect("urls_index")
 });
 
 app.post("/urls/:id/delete", (req,res) => {
