@@ -3,14 +3,17 @@
 <head>
   <title>TinyApp</title>
 </head>
-
+  <header>
+    <%include ./partials/_header.ejs %>
+  </header>
 <body>
   <!-- Add your EJS code here -->
-<h2>Variable</h2>
-<p><%= templateVars %></p>
-<header>
-  <%include ./partials/_header.ejs %>
-</header>
+  <h1>URLs</h1>
+  <h2>
+    <!-- need a forEach to show keys here -->
+    <%= Object.values(urls) %>
+  </h2>
+
 
 </body>
 </html>

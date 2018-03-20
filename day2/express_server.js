@@ -16,9 +16,9 @@ var urlDatabase = {
 function generateRandomString(){
   return Math.floor((1 + Math.random()) * 0x100000000).toString(36).substring(1);  //random number ==> to any letter/number
 }
-for (i = 0; i<20; i++){
-  console.log(generateRandomString());
-}
+// for (i = 0; i<20; i++){
+//   console.log(generateRandomString());
+// }
 
 
 app.get("/", (req, res) => {
@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   var templateVars = { urls: urlDatabase };
-  res.render("urls_index", {templateVars});
+  res.render("urls_index", templateVars);
   //res.end("test");
 });
 
@@ -36,13 +36,38 @@ app.get("/urls/new", (req, res) => { //Takes in new url and redirects to /urls
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);                // statement to see POST parameters
-  res.send("New URL Recieved");         // Respond with 'Ok' (we will replace this)
+  // console.log(req.body);                // statement to see POST parameters (url given at urls/new)
+  let newID = generateRandomString();
+  urlDatabase[newID] = req.body.longURL ;
+  // console.log(urlDatabase);
+  // res.send(`New URL Recieved: ${req.body.longURL} and this is the ID: ${newID}`);         // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${newID}`);
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id };
-  res.render("urls_show", { templateVars: templateVars});
+  let templateVars = { shortURL: req.params.id };    // req.params.id = ':id'
+  // console.log(templateVars);
+  res.render("urls_show_short", templateVars);
+
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  // let longURL = ...
+  if (urlDatabase[req.params.shortURL] === undefined) {
+    res.statusCode = 404;
+    console.log(res.statusCode);
+    res.end("Unknown Path");
+  } else {
+    res.statusCode = 301;
+    console.log(res.statusCode);
+    res.redirect(`/longURL/${req.params.shortURL}`);
+  }
+
+});
+
+app.get("/longURL/:id", (req,res) => {
+  let templateVars = { urls: urlDatabase, key: req.params.id};
+  res.render("urls_show_long", templateVars);
 
 });
 
