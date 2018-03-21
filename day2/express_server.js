@@ -32,14 +32,15 @@ function generateRandomString(){
   return Math.floor((1 + Math.random()) * 0x100000000).toString(36).substring(1);  //random number ==> to any letter/number
 }
 
+// for (i = 0; i<20; i++){
+//   console.log(generateRandomString());
+
+
 function emailCheck(email) {
   for (let user in users) {
     return (Object.values(users[user]).indexOf(email)>-1);
   }
 };
-// for (i = 0; i<20; i++){
-//   console.log(generateRandomString());
-
 
 app.get("/", (req, res) => {
   res.end("Hello! Welcome to tiny URLs, try /urls for some more interesting content");
@@ -113,20 +114,21 @@ app.get("/register", (req,res) => {
 
 app.post("/register", (req,res) => {
   // store user data
-  if (req.body.email === '' || req.body.id === '' || req.body.password === ''){
+  if (req.body.email === '' || req.body.password === ''){
     res.statusCode = 400;
     res.end("empty registration field");
   } else if (emailCheck(req.body.email)) {
     res.statusCode = 400;
     res.end("Email already in use");
   } else {
-  users[req.body.id]= { id : req.body.id,
-                        email: req.body.email,
-                        password: req.body.password
-                      };
+  let id = generateRandomString();
+  users[id]= { 'id' : id,
+             'email': req.body.email,
+          'password': req.body.password
+              };
   console.log(users);
   // add user_ID to cookie
-  res.cookie('userID', req.body.id);
+  res.cookie('userID', id);
   }
   //redirect to front page
   res.redirect("/urls")
