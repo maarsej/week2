@@ -26,6 +26,6 @@ node express_server.js
 ```
 ### Final Product
 Make sure all URLs added include at least a  // prefix or a full http://
-!["screenshot description"](#)
-!["screenshot description"](#)
+!["Screenshot of login page"](https://github.com/maarsej/week2/blob/master/tinyurl/docs/Screen%20Shot%202018-03-21%20at%204.15.32%20PM.png?raw=true)
+!["Example of how a users URL list could look "](https://github.com/maarsej/week2/blob/master/tinyurl/docs/Screen%20Shot%202018-03-21%20at%204.19.22%20PM.png?raw=true)
 
