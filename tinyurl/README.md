@@ -9,12 +9,16 @@ Upon cloning this respository simply change your directory to the project file '
 ### Prerequisites
 
 All prerequisite software is included in the package.json provided. Simply 'npm install' before attempting to run the program.
-
 ```
-Give examples
+cd tinyurl
 ```
-
-### Installing
+```
+npm install
+```
+```
+node express_server.js
+```
+### Usage
 
 A step by step series of examples that tell you have to get a development env running
 
