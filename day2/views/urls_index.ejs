@@ -14,25 +14,32 @@
     </h1>
   </form>
   <h2>
-    Access at /u/shortUrl or click the short URLs below!
-
+  Access at /u/shortUrl or click the short URLs below!
+  </h2>
 
   <!-- need a forEach to show keys here -->
-  <% for (key in urls) {%>
-  <h2>
-    <form style="display: inline;" method="POST" action="/urls/<%= key %>">
-      <a href=<%="/u/"+key%>><%= key+"-->" %></a>
-      <%= urls[key] %>
-      <input type="submit" value="Edit">
-    </form>
+  <% let counter = 0; %>
+  <% for (key in urls) { %>
+    <% if (urls[key].urlID === userID ) { %>
+      <% counter += 1; %>
+      <h2>
+        <form style="display: inline;" method="POST" action="/urls/<%= key %>">
+          <a href=<%="/u/"+key%>><%= key+"-->" %></a>
+          <%= urls[key].url %>
+          <input type="submit" value="Edit">
+        </form>
 
-    <form style="display: inline;" method="POST" action="/urls/<%= key %>/delete">
-      <input type="submit" value="Delete">
-    </form>
-
-  </h2>
+        <form style="display: inline;" method="POST" action="/urls/<%= key %>/delete">
+          <input type="submit" value="Delete">
+        </form>
+      </h2>
+    <% } %>
   <% } %>
-
+  <% if (counter === 0) { %>
+    <h1 style="color: red">
+      Login to see your URLs
+    </h1>
+  <% } %>
 
 </body>
 </html>

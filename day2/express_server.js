@@ -11,8 +11,10 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { url: "http://www.lighthouselabs.ca",
+              urlID: 'master'},
+  "9sm5xK": { url: "http://www.google.com",
+              urlID: 'master'}
 };
 
 const users = {
@@ -30,6 +32,11 @@ const users = {
     id: "f1pnl5",
     email: "user3@example.com",
     password: "password2"
+  },
+  "master": {
+    id: "master",
+    email: "test@test.com",
+    password: "123"
   }
 }
 // let userInfo[] = {
@@ -80,7 +87,9 @@ app.post("/urls", (req, res) => {
     if (urlDatabase[newID] !== undefined) {
       let newID = generateRandomString();
     } else {
-      urlDatabase[newID] = req.body.longURL ;
+      urlDatabase[newID] = {};
+      urlDatabase[newID].url = req.body.longURL;
+      urlDatabase[newID].urlID = req.cookies["userID"];
       check = false;
     }
   }
@@ -90,12 +99,20 @@ app.post("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
    let templateVars = { userID: req.cookies["userID"],
   users: users, urls: urlDatabase, key: req.params.id};
-  res.render("urls_new", templateVars);
+  if (templateVars.userID !== undefined){
+    res.render("urls_new", templateVars);
+  } else {
+    res.render("urls_login", templateVars);
+  }
 });
 app.post("/urls/new", (req, res) => {
   let templateVars = { userID: req.cookies["userID"],
   users: users, urls: urlDatabase, key: req.params.id};
- res.render("urls_new", templateVars);
+  if (templateVars.userID !== undefined){
+    res.render("urls_new", templateVars);
+  } else {
+    res.render("urls_login", templateVars);
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -110,14 +127,14 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  if (urlDatabase[req.params.shortURL] === undefined) {
+  if (urlDatabase[req.params.shortURL].url === undefined) {
     res.statusCode = 404;
     console.log(res.statusCode);
     res.end("Unknown Path");
   } else {
     res.statusCode = 301;
     console.log(res.statusCode);
-    res.redirect(urlDatabase[req.params.shortURL]);
+    res.redirect(urlDatabase[req.params.shortURL].url);
   }
 });
 
@@ -177,13 +194,23 @@ app.post("/register", (req,res) => {
 });
 
 app.post("/urls/:id/delete", (req,res) => {
-  delete urlDatabase[req.params.id];
-  res.redirect('/urls');
+  if (req.cookies['userID'] === urlDatabase[req.params.id].urlID){
+    delete urlDatabase[req.params.id];
+    res.redirect('/urls');
+  } else {
+    res.statusCode = 401;
+    res.end("Unauthorized request");
+  }
 });
 
 app.post("/urls/:id/update", (req,res) => {
-  urlDatabase[req.params.id] = req.body.updateURL;
+  if (req.cookies['userID'] === urlDatabase[req.params.id].urlID){
+  urlDatabase[req.params.id].url = req.body.updateURL;
   res.redirect('/urls');
+  } else {
+    res.statusCode = 401;
+    res.end("Unauthorized request");
+  }
 })
 
 

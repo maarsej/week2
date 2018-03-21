@@ -8,7 +8,7 @@
 </header>
 <body>
   <!-- Add your EJS code here -->
-<h2><%= urls[key]+" " %>Update</h2>
+<h2><%= urls[key].url +" " %>Update</h2>
 <p> ID: <%= key %> </p>
 <form method="POST" action="/urls/<%= key %>/update">
   <label for="updateURL">Update a URL:</label>
