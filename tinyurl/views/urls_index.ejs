@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <title>TinyApp</title>
+  <meta charset="utf-8">
+  <title>Tiny App</title>
+  <link rel="stylesheet" href="tinyurlstyle.css" type="text/css">
 </head>
+
 <header>
   <%include ./partials/_header.ejs %>
 </header>
+
 <body>
+  <div id="wrapper"> </br>
   <!-- Add your EJS code here -->
   <form method="POST" action="/urls/new">
     <h1> URLs
@@ -16,7 +21,7 @@
   <h2>
   Access at /u/shortUrl or click the short URLs below!
   </h2>
-
+</div>
   <!-- need a forEach to show keys here -->
   <% let counter = 0; %>
   <% for (key in urls) { %>
@@ -37,10 +42,9 @@
     <% } %>
   <% } %>
   <% if (counter === 0) { %>
-    <h2 style="color: red">
+    <h2 style="color: #ff7f50">
       Login to see your URLs or add some with 'New URL'
     </h2>
   <% } %>
-
 </body>
 </html>

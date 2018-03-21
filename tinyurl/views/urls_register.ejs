@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-     <title>Registration</title>
-  </head>
+<html lang='en'>
+<head>
+  <meta charset="utf-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="./tinyurlstyle.css">
+</head>
   <header style="font-size: 16px; padding: 0px;">
    <% include partials/_header %>
   </header>
-  <body style="font-size:20px; padding: 0px;">
+  <body>
+    <div id="wrapper">
     <form action="/register" method="POST" style="margin:150px;">
       <label for="email">Register here: </label> </br>
-      <input id="email" type="email" name="email" placeholder="email@example.com" style="width: 300px"> </br>
+      <input id="email" type="email" name="email" placeholder="email@example.com" style="width: 300px" autofocus> </br>
       <input id="password" type="password" name="password" placeholder="p4ssw0rd" style="width: 300px">
       <input type="submit" value="Submit">
     </form>
+   </div>
   </body>
 </html>

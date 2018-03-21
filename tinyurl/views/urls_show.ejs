@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <title>Edit URL</title>
+  <meta charset="utf-8">
+  <title>Update URL</title>
+  <link rel="stylesheet" href="./tinyurlstyle.css">
 </head>
 <header>
   <% include ./partials/_header.ejs %>
 </header>
 <body>
+  <div id="wrapper">
   <!-- Add your EJS code here -->
 <h2><%= urls[key].url +" " %>Update</h2>
 <p> ID: <%= key %> </p>
@@ -15,6 +18,6 @@
   <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
   <input type="submit" value="Update">
 </form>
-
+<div id="wrapper">
 </body>
 </html>
