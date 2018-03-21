@@ -11,7 +11,7 @@
 <h2><%= urls[key].url +" " %>Update</h2>
 <p> ID: <%= key %> </p>
 <form method="POST" action="/urls/<%= key %>/update">
-  <label for="updateURL">Update a URL:</label>
+  <label for="updateURL">Update a URL (include http://):</label>
   <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
   <input type="submit" value="Update">
 </form>

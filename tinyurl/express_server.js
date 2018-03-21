@@ -242,7 +242,7 @@ app.post("/logout", (req,res) => {
 })
 
 app.post("/urls/:id/delete", (req,res) => {
-  if (req.cookies['userID'] === urlDatabase[req.params.id].urlID){
+  if (req.session['userID'] === urlDatabase[req.params.id].urlID){
     delete urlDatabase[req.params.id];
     res.redirect('/urls');
   } else {
@@ -253,7 +253,7 @@ app.post("/urls/:id/delete", (req,res) => {
 
 app.post("/urls/:id/update", (req,res) => {
   if (req.session['userID'] === urlDatabase[req.params.id].urlID){
-  urlDatabase[req.params.id].url = req.body.updateURL;
+    urlDatabase[req.params.id].url = req.body.updateURL;
   res.redirect('/urls');
   } else {
     res.statusCode = 401;

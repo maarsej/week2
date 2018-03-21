@@ -8,28 +8,24 @@ Upon cloning this respository simply change your directory to the project file '
 
 ### Prerequisites
 
-All prerequisite software is included in the package.json provided. Simply 'npm install' before attempting to run the program.
-```
-cd tinyurl
-```
+All prerequisite software except Node.js is included in the package.json provided. Simply 'npm install' before attempting to run the program.
+- Node.js
+- Express
+- EJS
+- bcrypt
+- body-parser
+- cookie-session
+
+### Getting Started
+
 ```
 npm install
 ```
 ```
 node express_server.js
 ```
-### Usage
+### Final Product
+Make sure all URLs added include at least a  // prefix or a full http://
+!["screenshot description"](#)
+!["screenshot description"](#)
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
