@@ -6,19 +6,17 @@
   <form style="display: inline;" method="GET" action="/urls">
     <input type="submit" value="Home">
   </form>
-  <form style="display: inline;" method="GET" action="/register">
-    <input type="submit" value="Register">
-  </form>
   <body>
-    <% if(username == undefined){ %>
-    <form style="display: inline;" method="POST" action="/login">
-      <label for="username"> Username: </label>
-      <input id="username" type="text" name="username" placeholder="username" style="width: 300px">
+    <% if(userID === undefined){ %>
+    <form style="display: inline;" method="GET" action="/login">
       <input type="submit" value="Login">
+    </form>
+    <form style="display: inline;" method="GET" action="/register">
+      <input type="submit" value="Register">
     </form>
     <% } else { %>
     <form style="display: inline;" method="POST" action="/logout">
-      <%= 'Logged in as: ' + username %>
+      <%= 'Logged in as: ' + users[userID].email %>
       <input type="submit" value="Logout">
     </form>
     <% } %>
