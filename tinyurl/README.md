@@ -37,4 +37,4 @@ Make sure all URLs added include at least a  // prefix or a full http://
 
 
 ### Stretch
-Added method-override in order to allow usage of the proper method request in the forms. For example: put/delete requests in the instances of updating an url or deleting a url respectively.
+Added method-override in order to allow usage of the proper method request in the forms. For example: put/delete requests in the instances of updating a url or deleting a url respectively.
