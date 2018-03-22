@@ -13,7 +13,8 @@
   <!-- Add your EJS code here -->
 <h2><%= urls[key].url +" " %>Update</h2>
 <p> ID: <%= key %> </p>
-<form method="POST" action="/urls/<%= key %>/update">
+<!-- <form method="POST" action="/urls/<%= key %>/update"> -->
+  <form style="display: inline;" method="POST" action="/urls/<%= key %>?_method=PUT">
   <label for="updateURL">Update a URL (include http://):</label>
   <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
   <input type="submit" value="Update">

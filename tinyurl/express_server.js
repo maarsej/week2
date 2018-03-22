@@ -16,7 +16,9 @@ const PORT = process.env.PORT || 8080;
 const cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override')
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride('_method'))
 
 app.use(cookieSession({
   name: 'session',
@@ -159,7 +161,8 @@ app.get("/urls/:id", (req, res) => {
     res.render("urls_show", templateVars);
   }
 });
-app.post("/urls/:id", (req, res) => {
+// app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
    let templateVars = { userID: req.session["userID"],
   users: users, urls: urlDatabase, key: req.params.id};
   if (req.session['userID'] === urlDatabase[req.params.id].urlID){
@@ -211,6 +214,17 @@ app.post("/register", (req,res) => {
   res.redirect("/urls")
 });
 
+//app.post("/urls/:id/delete", (req,res) => {
+app.delete("/urls/:id", (req,res) => {
+  if (req.session['userID'] === urlDatabase[req.params.id].urlID){
+    delete urlDatabase[req.params.id];
+    res.redirect('/urls');
+  } else {
+    res.statusCode = 401;
+    res.end("Unauthorized request");
+  }
+});
+
 app.get("/login", (req,res) => {
   let templateVars = { userID: req.session["userID"],
   users: users, urls: urlDatabase, key: req.params.id};
@@ -240,16 +254,6 @@ app.post("/logout", (req,res) => {
   req.session = null;
   res.redirect('/urls');
 })
-
-app.post("/urls/:id/delete", (req,res) => {
-  if (req.session['userID'] === urlDatabase[req.params.id].urlID){
-    delete urlDatabase[req.params.id];
-    res.redirect('/urls');
-  } else {
-    res.statusCode = 401;
-    res.end("Unauthorized request");
-  }
-});
 
 app.post("/urls/:id/update", (req,res) => {
   if (req.session['userID'] === urlDatabase[req.params.id].urlID){
