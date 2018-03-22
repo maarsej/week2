@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <% include partials/_style %>
-  <title>Update URL</title>
+  <title>URL info</title>
 </head>
 <header>
   <% include ./partials/_header.ejs %>
@@ -12,7 +12,7 @@
   <div id="columncontainer">
     <!-- Add your EJS code here -->
     <div id="column1">
-      <h2><%= urls[key].url +" " %>Update</h2>
+      <h2><%= urls[key].url +" " %></h2>
       <h3>Analytics</h3>
       <h4>Total Visits:<%= urls[key].visits%></h4>
       <h4>Total Unique Visits:<%= urls[key].uniqueVisits%></h4>
