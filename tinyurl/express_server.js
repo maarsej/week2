@@ -114,6 +114,9 @@ app.post("/urls", (req, res) => {
   let check = true;
   if (!req.session["userID"]){
     res.end('You must be logged in to generate URLs')
+  } else if (req.body.longURL === ''){
+    res.statusCode = 400;
+    res.end("Cant add empty URL");
   } else {
     while (check === true){
       if (urlDatabase[newID] !== undefined) {
@@ -165,7 +168,10 @@ app.get("/urls/:id", (req, res) => {
 app.put("/urls/:id", (req, res) => {
    let templateVars = { userID: req.session["userID"],
   users: users, urls: urlDatabase, key: req.params.id};
-  if (req.session['userID'] === urlDatabase[req.params.id].urlID){
+  if (req.body.updateURL === ''){
+    res.statusCode = 400;
+    res.end("Cant update with a blank URL");
+  } else if (req.session['userID'] === urlDatabase[req.params.id].urlID){
     urlDatabase[req.params.id].url = req.body.updateURL;
     res.redirect('/urls');
   } else {
