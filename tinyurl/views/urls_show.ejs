@@ -9,17 +9,28 @@
   <% include ./partials/_header.ejs %>
 </header>
 <body>
-  <div id="wrapper">
-  <!-- Add your EJS code here -->
-<h2><%= urls[key].url +" " %>Update</h2>
-<h3>Analytics</h3>
-<h4>Total Visits:<%= urls[key].visits%></h4>
-<p> ID: <%= key %> </p>
-  <form style="display: inline;" method="POST" action="/urls/<%= key %>?_method=PUT">
-  <label for="updateURL">Update a URL (include http://):</label>
-  <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
-  <input type="submit" value="Update">
-</form>
-<div id="wrapper">
+  <div id="columncontainer">
+    <!-- Add your EJS code here -->
+    <div id="column1">
+      <h2><%= urls[key].url +" " %>Update</h2>
+      <h3>Analytics</h3>
+      <h4>Total Visits:<%= urls[key].visits%></h4>
+      <h4>Total Unique Visits:<%= urls[key].uniqueVisits%></h4>
+      <p> ID: <%= key %> </p>
+      <form style="display: inline;" method="POST" action="/urls/<%= key %>?_method=PUT">
+        <label for="updateURL">Update a URL (include http://):</label>
+        <input id="updateURL" type="text" name="updateURL" placeholder="http://updatedexample.com" style="width: 300px">
+        <input type="submit" value="Update">
+      </form>
+    </div>
+    <div id="column2">
+      <h4> All visits: </h4>
+      <% for (times in visits[key]) {%>
+      <li>
+        <%= [times] + " by " + visits[key][times] %>
+      </li>
+      <%}%>
+    </div>
+  </div>
 </body>
 </html>

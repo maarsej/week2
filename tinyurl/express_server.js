@@ -16,10 +16,11 @@ const PORT = process.env.PORT || 8080;
 const cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
+const cookie = require('cookie-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'))
-
+app.use(cookie())
 app.use(cookieSession({
   name: 'session',
   keys: ['secret'],
@@ -30,10 +31,18 @@ app.set("view engine", "ejs");
 const urlDatabase = {
   "b2xVn2": { url: "http://www.lighthouselabs.ca",
               urlID: 'master',
-              visits: 0},
+              visits:''},
   "9sm5xK": { url: "http://www.google.com",
               urlID: 'master',
-              visits: 0}
+              visits:'',
+              uniqueVisits:'',
+              uniqueIDs : []
+  }
+};
+
+const siteVisits = {
+  "b2xVn2" : {},
+  "9sm5xK" : {}
 };
 
 const users = {
@@ -60,6 +69,10 @@ const users = {
 }
 
 //Function declarations
+function trackingIDGen(){
+  return Math.floor((1 + Math.random()) * 0x1000000);
+}
+const usedIDs= [];
 
 function generateRandomString(){
   return Math.floor((1 + Math.random()) * 0x100000000).toString(36).substring(1);  //random number ==> to any letter/number
@@ -90,14 +103,23 @@ function emailCheck(email) {
   }
   return false;
 };
+
 function passCheck(password, id) {
     return bcrypt.compareSync(password, users[id].password);
 };
 
+// today = function () {
+//     return ((getDate() < 10)?"0":"") + getDate() +"/"+(((getMonth()+1) < 10)?"0":"") + (getMonth()+1) +"/"+ getFullYear();
+// }
+
+// timeNow = function () {
+//      return ((getHours() < 10)?"0":"") + getHours() +":"+ ((getMinutes() < 10)?"0":"") + getMinutes() +":"+ ((getSeconds() < 10)?"0":"") + getSeconds();
+// }
+
 //Server body to handle requests, using GET and POST methods only
 
 app.get("/", (req, res) => {
-  let templateVars = { userID: req.session["userID"],
+  let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (templateVars.userID !== undefined){
     res.redirect("/urls");
@@ -107,7 +129,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { userID: req.session["userID"],
+  let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   res.render("urls_index", templateVars);
 });
@@ -136,7 +158,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-   let templateVars = { userID: req.session["userID"],
+   let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (templateVars.userID !== undefined){
     res.render("urls_new", templateVars);
@@ -145,7 +167,7 @@ app.get("/urls/new", (req, res) => {
   }
 });
 app.post("/urls/new", (req, res) => {
-  let templateVars = { userID: req.session["userID"],
+  let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (templateVars.userID !== undefined){
     res.render("urls_new", templateVars);
@@ -155,7 +177,7 @@ app.post("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-   let templateVars = { userID: req.session["userID"],
+   let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (!urlExists(req.params.id)){
     res.end("URL for given ID doesnt exist")
@@ -169,7 +191,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.put("/urls/:id", (req, res) => {
-   let templateVars = { userID: req.session["userID"],
+   let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (req.body.updateURL === ''){
     res.statusCode = 400;
@@ -193,18 +215,62 @@ app.delete("/urls/:id", (req,res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  // Check that url exists
   if (urlDatabase[req.params.shortURL].url === undefined) {
     res.statusCode = 404;
     res.end("Unknown Path");
-  } else {
-    res.statusCode = 301;
-    urlDatabase[req.params.shortURL].visits += 1;
+  //If it exists set status code, perform analytics, redirect
+} else {
+  res.statusCode = 301;
+  let currentTrackingID;
+
+    // does the user have a tracking id? if no assign them one
+    if (!req.cookies.trackingID){
+      let check = true;
+      let newID = trackingIDGen();
+      while (check === true){
+        if (usedIDs.includes(newID)) {
+          newID = trackingIDGen();
+        } else {
+          res.cookie('trackingID', newID)
+          usedIDs.push(newID);
+          currentTrackingID = newID;
+          check = false;
+        }
+      }
+    } else {
+      currentTrackingID = Number(req.cookies.trackingID);
+    }
+      // has this url been visited before? create visits tag at 1 if no, add 1 to count if yes
+      if (urlDatabase[req.params.shortURL].visits) {
+        urlDatabase[req.params.shortURL].visits += 1;
+      } else {
+        urlDatabase[req.params.shortURL].visits = 1;
+      }
+      // what is the date and time of this visit? add it to siteVisits object
+      let datetime = Date();
+      siteVisits[req.params.shortURL][datetime] = currentTrackingID;
+    // is this user a unique visitor? add to unique visit analytics
+    if (!urlDatabase[req.params.shortURL].uniqueIDs){
+      urlDatabase[req.params.shortURL].uniqueIDs = [];
+    }
+    if (!urlDatabase[req.params.shortURL].uniqueIDs.includes(currentTrackingID)){
+      let uniqueUsers = Object.values(urlDatabase[req.params.shortURL].uniqueIDs).length
+      urlDatabase[req.params.shortURL].uniqueIDs.push(currentTrackingID);
+      if(urlDatabase[req.params.shortURL].uniqueVisits === undefined) {
+        urlDatabase[req.params.shortURL].uniqueVisits = 1;
+      } else {
+        urlDatabase[req.params.shortURL].uniqueVisits += 1;
+      }
+    }
+    // redirect
+
     res.redirect(urlDatabase[req.params.shortURL].url);
   }
 });
 
 app.get("/register", (req,res) => {
-   let templateVars = { userID: req.session["userID"],
+   let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (!req.session["userID"]){
     res.render("urls_register", templateVars);
@@ -229,12 +295,13 @@ app.post("/register", (req,res) => {
   // add user_ID to cookie
   req.session['userID'] = id;
   }
+  res.clearCookie("trackingID");
   //redirect to front page
   res.redirect("/urls")
 });
 
 app.get("/login", (req,res) => {
-  let templateVars = { userID: req.session["userID"],
+  let templateVars = { userID: req.session["userID"], visits: siteVisits,
   users: users, urls: urlDatabase, key: req.params.id};
   if (!req.session["userID"]){
     res.render('urls_login', templateVars);
@@ -254,11 +321,13 @@ app.post("/login", (req,res) => {
   // add user_ID to cookie
   req.session['userID'] = getID(req.body.email);
   }
+  res.clearCookie("trackingID");
   //redirect to front page
   res.redirect("/urls")
 });
 
 app.post("/logout", (req,res) => {
+  res.clearCookie("trackingID");
   req.session = null;
   res.redirect('/urls');
 })

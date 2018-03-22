@@ -38,3 +38,5 @@ Make sure all URLs added include at least a  // prefix or a full http://
 
 ### Stretch
 Added method-override in order to allow usage of the proper method request in the forms. For example: put/delete requests in the instances of updating a url or deleting a url respectively.
+Added analytics to track the number of visits a URL has as well as the number of unique 'sessions' that have visited that url. The server also tracks what time the user visited and by a randomly generated session token those visit times are also displayed. The analytics is shown on the individual url/:id page as shown below.
+!["Analytics Page"]()
