@@ -2,16 +2,15 @@
 <html lang='en'>
 <head>
   <meta charset="utf-8">
+  <% include _style %>
 </head>
 
 <body>
-  <div class="container-fluid">
-
-    <div id="masthead">
-      <div class="container">
-        <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
-        Tiny URL
-        <form style="display: inline;" method="GET" action="/urls">
+      <div class="header">
+       Tiny URL
+  </div>
+  <div class="topnav">
+         <form style="display: inline;" method="GET" action="/urls">
           <input type="submit" value="Home">
         </form>
 
@@ -28,7 +27,5 @@
           <input type="submit" value="Logout">
         </form>
         <% } %>
-      </div>
-    </div>
   </div>
 </body>
