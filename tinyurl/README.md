@@ -14,6 +14,7 @@ All prerequisite software except Node.js is included in the package.json provide
 - EJS
 - bcrypt
 - body-parser
+- cookie-parser
 - cookie-session
 - method-override
 
