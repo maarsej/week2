@@ -12,6 +12,8 @@
   <div id="wrapper">
   <!-- Add your EJS code here -->
 <h2><%= urls[key].url +" " %>Update</h2>
+<h3>Analytics</h3>
+<h4>Total Visits:<%= urls[key].visits%></h4>
 <p> ID: <%= key %> </p>
   <form style="display: inline;" method="POST" action="/urls/<%= key %>?_method=PUT">
   <label for="updateURL">Update a URL (include http://):</label>

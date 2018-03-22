@@ -29,9 +29,11 @@ app.set("view engine", "ejs");
 
 const urlDatabase = {
   "b2xVn2": { url: "http://www.lighthouselabs.ca",
-              urlID: 'master'},
+              urlID: 'master',
+              visits: 0},
   "9sm5xK": { url: "http://www.google.com",
-              urlID: 'master'}
+              urlID: 'master',
+              visits: 0}
 };
 
 const users = {
@@ -125,6 +127,7 @@ app.post("/urls", (req, res) => {
         urlDatabase[newID] = {};
         urlDatabase[newID].url = req.body.longURL;
         urlDatabase[newID].urlID = req.session["userID"];
+        urlDatabase[newID].visits = 0;
         check = false;
       }
     }
@@ -195,6 +198,7 @@ app.get("/u/:shortURL", (req, res) => {
     res.end("Unknown Path");
   } else {
     res.statusCode = 301;
+    urlDatabase[req.params.shortURL].visits += 1;
     res.redirect(urlDatabase[req.params.shortURL].url);
   }
 });
