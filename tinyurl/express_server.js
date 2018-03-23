@@ -1,4 +1,4 @@
- /*jshint esversion: 6 */
+   /*jshint esversion: 6 */
  /*
  Created by: Jacob Maarse
  Date Created: March 20th, 2018
@@ -221,7 +221,7 @@ app.get("/u/:shortURL", (req, res) => {
     res.end("Unknown Path");
   //If it exists set status code, perform analytics, redirect
 } else {
-  res.statusCode = 301;
+  res.statusCode = 302;
   let currentTrackingID;
 
     // does the user have a tracking id? if no assign them one
