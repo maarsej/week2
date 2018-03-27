@@ -249,6 +249,7 @@ app.get("/u/:shortURL", (req, res) => {
       }
       // what is the date and time of this visit? add it to siteVisits object
       let datetime = Date();
+      siteVisits[req.params.shortURL] = {};
       siteVisits[req.params.shortURL][datetime] = currentTrackingID;
     // is this user a unique visitor? add to unique visit analytics
     if (!urlDatabase[req.params.shortURL].uniqueIDs){
